@@ -4,11 +4,11 @@ import "time"
 
 type Book struct {
 	ID        int64     `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time `json:"-"` // Use - to hide a field in json responses
 	Title     string    `json:"title"`
 	Author    string    `json:"author"`
-	Year      int       `json:"year"`
-	Pages     int       `json:"pages"`
-	Genres    []string  `json:"genres"`
+	Year      int       `json:"year,omitempty"`
+	Pages     int       `json:"pages,omitempty"`
+	Genres    []string  `json:"genres,omitempty"`
 	Version   int       `json:"version"`
 }
