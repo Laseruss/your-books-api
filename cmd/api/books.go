@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -9,13 +10,27 @@ import (
 )
 
 func (app *application) addBookHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Add a new book")
+	var input struct {
+		Title  string   `json:"title"`
+		Author string   `json:"author"`
+		Year   int      `json:"year"`
+		Pages  int      `json:"pages"`
+		Genres []string `json:"genres"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&input)
+	if err != nil {
+		app.errorResponse(w, r, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	fmt.Fprintf(w, "%+v\n", input)
 }
 
 func (app *application) getBookHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(r)
 	if err != nil {
-		http.NotFound(w, r)
+		app.notFoundResponse(w, r)
 		return
 	}
 
